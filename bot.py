@@ -90,7 +90,7 @@ def calcPath(y):
     x = y
     msg = ""
     while (x.getPred()):
-        msg += x.getId() + "->"
+        msg += x.getId() + " -> "
         x = x.getPred()
     msg += x.getId()
     return msg
@@ -102,6 +102,8 @@ def wordLadder(word1, word2):
 
 
 def main():
+    # Build the graph for the given dictionary
+    g = ladder.constructGraph(dictionary_file)
     # Here we connect to the server using the port
     ircsock.connect((server, port))
     # We are basically filling out a form with this line and saying to set all the fields to the bot nickname.
@@ -113,7 +115,6 @@ def main():
     sleep(5)
     # Join channel specified in globals
     ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
-    g = ladder.constructGraph(dictionary_file)
     while 1:
         ircmsg = ircsock.recv(2048).decode("UTF-8")
         ircmsg = ircmsg.strip('nr')
