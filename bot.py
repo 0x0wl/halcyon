@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import socket
-from pythonds.graphs import Graph
 from time import sleep
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
