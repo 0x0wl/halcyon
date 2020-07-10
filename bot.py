@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import socket
 from time import sleep
+import ladder
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net" # Server
@@ -70,8 +71,19 @@ def parsemsg(msg, nick):
     sendmsg(oldmsg)
   else: # if not a command, log the msg
     logmsg(msg)
-    
   
+def calcPath(y):
+    x = y
+    msg = ""
+    while (x.getPred()):
+        msg += x.getId() + "->"
+        x = x.getPred()
+    msg += x.getId()
+    return msg
+
+
+
+
 def main():
   ircsock.connect((server, port)) # Here we connect to the server using the port
   ircsock.send(bytes("USER "+ botnick +" "+ botnick +" "+ botnick + " " + botnick + "\n", "UTF-8")) #We are basically filling out a form with this line and saying to set all the fields to the bot nickname.
