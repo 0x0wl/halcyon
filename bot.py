@@ -12,7 +12,7 @@ botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
 msglog = []
-logcap = 5
+logcap = 100
 dictionary_file = "words.txt"
 # Build the graph for the given dictionary
 g = ladder.constructGraph(dictionary_file)
@@ -54,7 +54,7 @@ def parsemsg(msg, nick):
     if msg[0:2] == "y/":  # y/word/ -> ward, just queries the bot for the passed word
         print("<"+nick+"> "+msg)
         word = msg[2:]
-        word = word[:word.find("/")]
+        word = word.strip("/")
         if word.find(" ") != -1:
             sendmsg("Only single words are supported")
             return
@@ -63,7 +63,7 @@ def parsemsg(msg, nick):
     elif msg[0:2] == "x/":  # x/word/ -> that's my favorite ward, finds recent message with passed word and prints message with replaced word
         print("<"+nick+"> "+msg)
         word = msg[2:]
-        word = word[:word.find("/")]
+        word = word.strip("/")
         if word.find(" ") != -1:
             sendmsg("Only single words are supported")
             return
@@ -87,16 +87,18 @@ def parsemsg(msg, nick):
         print("<"+nick+"> "+msg)
         words = msg[4:].split()
         sendmsg(wordLadder(words[0], words[1]))
-    elif msg[0:3] == "log":
-      print("<"+nick+"> "+msg)
-      printlog = " "
-      i = 0
-      while i < len(msglog):
-        printlog = printlog + "|" + msglog[i]
-        i = i + 1
-      sendmsg(printlog)
-    elif msg[0:2] == "ll":
-      sendmsg(str(len(msglog)))
+    
+    #elif msg[0:3] == "log":
+      #print("<"+nick+"> "+msg)
+      #printlog = " "
+      #i = 0
+      #while i < len(msglog):
+        #printlog = printlog + "|" + msglog[i]
+        #i = i + 1
+      #sendmsg(printlog)
+    #elif msg[0:2] == "ll":
+      #sendmsg(str(len(msglog)))
+    
     else:  # if not a command, log the msg
         logmsg(msg)
 
