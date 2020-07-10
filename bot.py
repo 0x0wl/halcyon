@@ -66,7 +66,7 @@ def parsemsg(msg, nick):
         if word.find(" ") != -1:
             sendmsg("Only single words are supported")
             return
-        oldmsg = ""
+        oldmsg = " "
         oldmsg = msglogsearch(word)
         if len(oldmsg) > 0:
             split = oldmsg.find(word)
@@ -79,9 +79,24 @@ def parsemsg(msg, nick):
         if word.find(" ") != -1:
             sendmsg("Only single words are supported")
             return
-        oldmsg = ""
+        oldmsg = " "
         oldmsg = msglogsearch(word)
         sendmsg(oldmsg)
+    elif msg[0:3] == "!wl":
+        print("<"+nick+"> "+msg)
+        words = word = msg[4:]
+        split = words.find(" ")
+        word1 = words[:split]
+        word2 = words[split+1:]
+        sendmsg(wordLadder(word1, word2))
+    elif msg == "log":
+      print("<"+nick+"> "+msg)
+      printlog = " "
+      i = 0
+      while i < len(msglog):
+        printlog = printlog + "," + msglog[i]
+        i = i + 1
+      sendmsg(printlog)
     else:  # if not a command, log the msg
         logmsg(msg)
 
