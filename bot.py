@@ -7,13 +7,11 @@ ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net" # Server
 port = 6667
 channel = "#bots" # Channel
-botnick = "xchain" # Your bots nick
-botnickpass = "meme1234"
+botnick = "halcyon" # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
 msglog = []
 logcap = 100
-
     
     
 def pong(id): # respond to server Pings.
@@ -31,15 +29,6 @@ def logmsg(msg):
 
 def getsimilarword(word):
   return "poop"
-
-
-
-#lemon
-#_emon, l_mon, le_on, lem_n, lemo_
-
-#demon
-#_emon
-
 
 
 def constructGraph(): # try this for serialization https://www.tutorialspoint.com/object_oriented_python/object_oriented_python_serialization.htm#:~:text=Pickle,a%20working%20Python%20object%20hierarchy.
