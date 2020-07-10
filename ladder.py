@@ -162,7 +162,7 @@ def pullNeighbors(g, word):
     return [nbr.getId() for nbr in g.getVertex(word).getConnections()]
 
 def main():
-    g = constructGraph('/home/parrot/Projects/word_test/words.txt')
+    g = constructGraph('words.txt')
     bfs(g, g.getVertex(sys.argv[2]))
     traverse(g.getVertex(sys.argv[1]))
 
