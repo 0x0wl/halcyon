@@ -14,7 +14,8 @@ exitcode = "bye " + botnick
 msglog = []
 logcap = 100
 dictionary_file = "words.txt"
-g = ladder.Graph()
+# Build the graph for the given dictionary
+g = ladder.constructGraph(dictionary_file)
 
 
 def pong(id):  # respond to server Pings.
@@ -114,8 +115,6 @@ def wordLadder(word1, word2):
 
 
 def main():
-    # Build the graph for the given dictionary
-    g = ladder.constructGraph(dictionary_file)
     # Here we connect to the server using the port
     ircsock.connect((server, port))
     # We are basically filling out a form with this line and saying to set all the fields to the bot nickname.
@@ -129,7 +128,7 @@ def main():
     ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
     while 1:
         ircmsg = ircsock.recv(2048).decode("UTF-8")
-        ircmsg = ircmsg.strip('nr')
+        ircmsg = ircmsg.strip('\n\r')
         if ircmsg.find("PRIVMSG") != -1:
             name = ircmsg.split('!', 1)[0][1:]
             message = ircmsg.split('PRIVMSG', 1)[1].split(':', 1)[1]

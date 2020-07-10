@@ -166,3 +166,4 @@ def main():
     bfs(g, g.getVertex(sys.argv[2]))
     traverse(g.getVertex(sys.argv[1]))
 
+main()
