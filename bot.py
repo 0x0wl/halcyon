@@ -12,7 +12,7 @@ botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
 msglog = []
-logcap = 100
+logcap = 5
 dictionary_file = "words.txt"
 g = ladder.Graph()
 
@@ -91,9 +91,11 @@ def parsemsg(msg, nick):
       printlog = " "
       i = 0
       while i < len(msglog):
-        printlog = printlog + "," + msglog[i]
+        printlog = printlog + "|" + msglog[i]
         i = i + 1
       sendmsg(printlog)
+    elif msg[0:2] == "ll":
+      sendmsg(str(len(msglog)))
     else:  # if not a command, log the msg
         logmsg(msg)
 
