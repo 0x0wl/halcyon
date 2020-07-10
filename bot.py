@@ -128,7 +128,7 @@ def main():
     ircsock.send(bytes("NICK " + botnick + "\n", "UTF-8"))
     #ircsock.send(bytes("NICKSERV IDENTIFY " + botnickpass + "\n", "UTF-8"))
     #set the bot mode
-    ircsock.send(bytes("MODE " + botnick + "\n", "UTF-8"))
+    ircsock.send(bytes("MODE " + botnick + " +B\n", "UTF-8"))
     sleep(5)
     # Join channel specified in globals
     ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
