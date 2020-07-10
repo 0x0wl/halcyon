@@ -84,12 +84,9 @@ def parsemsg(msg, nick):
         sendmsg(oldmsg)
     elif msg[0:3] == "!wl":
         print("<"+nick+"> "+msg)
-        words = word = msg[4:]
-        split = words.find(" ")
-        word1 = words[:split]
-        word2 = words[split+1:]
-        sendmsg(wordLadder(word1, word2))
-    elif msg == "log":
+        words = msg[4:].split()
+        sendmsg(wordLadder(words[0], words[1]))
+    elif msg[0:3] == "log":
       print("<"+nick+"> "+msg)
       printlog = " "
       i = 0
