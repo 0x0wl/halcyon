@@ -13,7 +13,7 @@ admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
 msglog = []
 logcap = 100
-dictionary_file = words.txt
+dictionary_file = "words.txt"
 g = ladder.Graph()
 
 
@@ -98,7 +98,7 @@ def calcPath(y):
 
 def wordLadder(word1, word2):
     ladder.bfs(g, g.getVertex(word2))
-    return calcPath(g.getVertex(word1)
+    return calcPath(g.getVertex(word1))
 
 
 def main():
