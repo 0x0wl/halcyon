@@ -165,5 +165,3 @@ def main():
     g = constructGraph('words.txt')
     bfs(g, g.getVertex(sys.argv[2]))
     traverse(g.getVertex(sys.argv[1]))
-
-main()
