@@ -15,7 +15,6 @@ logcap = 100
     
 def pong(id): # respond to server Pings.
   ircsock.send(bytes("PONG :" + id + "\n", "UTF-8"))
-  print("PONG :" + id + "\n")
   
 def sendmsg(msg, target=channel): # sends messages to the target.
   ircsock.send(bytes("PRIVMSG "+ target +" :"+ msg +"\n", "UTF-8"))
@@ -30,9 +29,11 @@ def getsimilarword(word):
   return "poop"
 
 def msglogsearch(word):
-  for i in range(1, len(msglog)):
-    if msglog[-i].find(word):
-      return msglog[-i]
+  i = len(msglog)-1
+  while i >= 0:
+    if word.lower() in msglog[i].lower():
+      return msglog[i]
+    i = i - 1
     
 def parsemsg(msg, nick):
   #check for commands
@@ -41,6 +42,7 @@ def parsemsg(msg, nick):
     isAdmin = 1
     
   if msg[0:2] == "y/": #y/word/ -> ward, just queries the bot for the passed word
+    print("<"+nick+"> "+msg)
     word = msg[2:]
     word = word[:word.find("/")]
     if word.find(" ") != -1:
@@ -49,6 +51,7 @@ def parsemsg(msg, nick):
     sendmsg(getsimilarword(word))
       
   elif msg[0:2] == "x/": #x/word/ -> that's my favorite ward, finds recent message with passed word and prints message with replaced word
+    print("<"+nick+"> "+msg)
     word = msg[2:]
     word = word[:word.find("/")]
     if word.find(" ") != -1:
@@ -60,6 +63,7 @@ def parsemsg(msg, nick):
       split = oldmsg.find(word)
       sendmsg(oldmsg[:split] + getsimilarword(word) + oldmsg[split+len(word):])
   elif msg[0:2] == "?/":
+    print("<"+nick+"> "+msg)
     word = msg[2:]
     word = word[:word.find("/")]
     if word.find(" ") != -1:
@@ -82,7 +86,6 @@ def main():
   while 1:
     ircmsg = ircsock.recv(2048).decode("UTF-8")
     ircmsg = ircmsg.strip('nr')
-    print(ircmsg)
     if ircmsg.find("PRIVMSG") != -1:
       name = ircmsg.split('!',1)[0][1:]
       message = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1]
