@@ -30,24 +30,6 @@ def logmsg(msg):
 def getsimilarword(word):
   return "poop"
 
-
-def constructGraph(): # try this for serialization https://www.tutorialspoint.com/object_oriented_python/object_oriented_python_serialization.htm#:~:text=Pickle,a%20working%20Python%20object%20hierarchy.
-  category_list = {}# should be [] ?
-  english = open(dictionary_file, 'r') #define dictionary_file
-  for word in english:
-    word = word.strip('\n')
-    for i in range(len(word)):
-      category = word[:i] + "*" + word[i+1:]
-      if category in category_list:
-        category_list[category].append(word)
-      else:
-        category_list[category] = [word]
-  for category in category_list.keys():
-    for word1 in category_list[categories]:
-      for word2 in category_list[categories]:
-        if word1 != word2:
-            g.addEdge(word1,word2)
-
 def msglogsearch(word):
   for i in range(1, len(msglog)):
     if msglog[-i].find(word):
@@ -78,6 +60,15 @@ def parsemsg(msg, nick):
     if len(oldmsg) > 0:
       split = oldmsg.find(word)
       sendmsg(oldmsg[:split] + getsimilarword(word) + oldmsg[split+len(word):])
+  elif msg[0:2] == "?/":
+    word = msg[2:]
+    word = word[:word.find("/")]
+    if word.find(" ") != -1:
+      sendmsg("Only single words are supported")
+      return
+    oldmsg = ""
+    oldmsg = msglogsearch(word)
+    sendmsg(oldmsg)
   else: # if not a command, log the msg
     logmsg(msg)
     
