@@ -86,7 +86,12 @@ def parsemsg(msg, nick):
     elif msg[0:3] == "!wl":
         print("<"+nick+"> "+msg)
         words = msg[4:].split()
-        sendmsg(wordLadder(words[0], words[1]))
+        newmsg = "[ERR] command not formatted properly."
+        try:
+            newmsg = wordLadder(words[0], words[1])
+        except:
+            pass
+        sendmsg(newmsg)
     
     #elif msg[0:3] == "log":
       #print("<"+nick+"> "+msg)
@@ -114,8 +119,24 @@ def calcPath(y):
 
 
 def wordLadder(word1, word2):
-    ladder.bfs(g, g.getVertex(word2))
-    return calcPath(g.getVertex(word1))
+    if "Vertex" in str(type(g.getVertex(word1))) and "Vertex" in str(type(g.getVertex(word2))):
+        ladder.bfs(g, g.getVertex(word2))
+        return calcPath(g.getVertex(word1))
+    else:
+        w1 = 0
+        w2 = 0
+        if not "Vertex" in str(type(g.getVertex(word1))):
+            w1 = 1
+        if not "Vertex" in str(type(g.getVertex(word2))):
+            w2 = 1
+        if w1 and not w2:
+            return "[ERR] " + word1 + " not in dictionary."
+        elif w2 and not w1:
+            return "[ERR] " + word2 + " not in dictionary."
+        elif w1 and w2:
+            return "[ERR] neither " + word1 + " nor " + word2 + " in dictionary."
+        else:
+            return "[ERR] outlier catch. Please contact Kes."
 
 
 def main():
