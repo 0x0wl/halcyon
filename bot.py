@@ -132,7 +132,7 @@ def wordLadder(word1, word2):
     if "Vertex" in str(type(g.getVertex(word1))) and "Vertex" in str(type(g.getVertex(word2))):
         cache = []
         cache = ladder.bfs(g, g.getVertex(word2.lower()))
-        path = calcPath(g.getVertex(word1.lower())
+        path = calcPath(g.getVertex(word1.lower()))
         ladder.wipe(cache)
         #g = ladder.constructGraph(dictionary_file)
         return path
