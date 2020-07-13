@@ -120,7 +120,7 @@ def constructGraph(dictionary_file):
     category_list = {}
     english = open(dictionary_file, 'r')
     for word in english:
-        word = word.strip('\n')
+        word = word.strip('\n').lower()
         for i in range(len(word)):
             category = word[:i] + "*" + word[i+1:]
             if category in category_list:

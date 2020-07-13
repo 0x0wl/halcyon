@@ -34,6 +34,7 @@ def logmsg(msg):
 
 
 def getsimilarword(word):
+    word = word.lower()
     if g.getVertex(word) and len(ladder.pullNeighbors(g, word))>0:
         new_word = choice(ladder.pullNeighbors(g, word))
         return new_word
@@ -115,15 +116,14 @@ def parsemsg(msg, nick):
         logmsg(msg)
 
 
-def calcPath(word1, word2):
-    x = word1
+def calcPath(y):
+    x = y
     msg = ""
-    while (x.getPred()) and x.getId() != word2.getId():
+    while (x.getPred()):
         msg += x.getId() + " -> "
         x = x.getPred()
     msg += x.getId()
     return msg
-
 
 
 def wordLadder(word1, word2):
@@ -131,8 +131,8 @@ def wordLadder(word1, word2):
     global dictionary_file
     if "Vertex" in str(type(g.getVertex(word1))) and "Vertex" in str(type(g.getVertex(word2))):
         cache = []
-        cache = ladder.bfs(g, g.getVertex(word2))
-        path = calcPath(g.getVertex(word1), g.getVertex(word2))
+        cache = ladder.bfs(g, g.getVertex(word2.lower()))
+        path = calcPath(g.getVertex(word1.lower())
         ladder.wipe(cache)
         #g = ladder.constructGraph(dictionary_file)
         return path
