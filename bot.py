@@ -129,7 +129,7 @@ def calcPath(y):
 def wordLadder(word1, word2):
     global g
     global dictionary_file
-    if "Vertex" in str(type(g.getVertex(word1))) and "Vertex" in str(type(g.getVertex(word2))):
+    if "Vertex" in str(type(g.getVertex(word1.lower()))) and "Vertex" in str(type(g.getVertex(word2.lower()))):
         cache = []
         cache = ladder.bfs(g, g.getVertex(word2.lower()))
         path = calcPath(g.getVertex(word1.lower()))
