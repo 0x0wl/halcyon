@@ -7,7 +7,7 @@ from random import choice
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net"  # Server
 port = 6667
-channel = "#dtella"  # Channel
+channel = "#bots"  # Channel
 botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
@@ -34,7 +34,11 @@ def logmsg(msg):
 
 
 def getsimilarword(word):
-    return choice(ladder.pullNeighbors(g, word))
+    if g.getVertex(word) and len(ladder.pullNeighbors(g, word))>0:
+        new_word = choice(ladder.pullNeighbors(g, word))
+        return new_word
+    else:
+        return word
 
 
 def msglogsearch(word):
@@ -86,12 +90,15 @@ def parsemsg(msg, nick):
     elif msg[0:3] == "!wl":
         print("<"+nick+"> "+msg)
         words = msg[4:].split()
-        newmsg = "[ERR] command not formatted properly."
-        try:
-            newmsg = wordLadder(words[0], words[1])
-        except:
-            pass
+        if len(words[0]) == len(words[1]):
+            try:
+                newmsg = wordLadder(words[0], words[1])
+            except:
+                newmsg = "[ERR] command not formatted properly."
+        else:
+            newmsg = "[ERR] words are not the same length."
         sendmsg(newmsg)
+        
     
     #elif msg[0:3] == "log":
       #print("<"+nick+"> "+msg)
@@ -108,20 +115,27 @@ def parsemsg(msg, nick):
         logmsg(msg)
 
 
-def calcPath(y):
-    x = y
+def calcPath(word1, word2):
+    x = word1
     msg = ""
-    while (x.getPred()):
+    while (x.getPred()) and x.getId() != word2.getId():
         msg += x.getId() + " -> "
         x = x.getPred()
     msg += x.getId()
     return msg
 
 
+
 def wordLadder(word1, word2):
+    global g
+    global dictionary_file
     if "Vertex" in str(type(g.getVertex(word1))) and "Vertex" in str(type(g.getVertex(word2))):
-        ladder.bfs(g, g.getVertex(word2))
-        return calcPath(g.getVertex(word1))
+        cache = []
+        cache = ladder.bfs(g, g.getVertex(word2))
+        path = calcPath(g.getVertex(word1), g.getVertex(word2))
+        ladder.wipe(cache)
+        #g = ladder.constructGraph(dictionary_file)
+        return path
     else:
         w1 = 0
         w2 = 0
@@ -140,6 +154,7 @@ def wordLadder(word1, word2):
 
 
 def main():
+
     # Here we connect to the server using the port
     ircsock.connect((server, port))
     # We are basically filling out a form with this line and saying to set all the fields to the bot nickname.

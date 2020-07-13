@@ -89,6 +89,14 @@ class Vertex:
     def getId(self):
         return self.id
 
+    def reset(self):
+        #self.connectedTo = {}
+        self.color = 'white'
+        self.dist = sys.maxsize
+        self.pred = None
+        self.disc = 0
+        self.fin = 0
+
 
 class Queue:
     def __init__(self):
@@ -130,6 +138,7 @@ def constructGraph(dictionary_file):
 
 #build a tree for Vertex root
 def bfs(g, root):
+    cache = [root]
     root.setDistance(0)
     root.setPred(None)
     q = Queue()
@@ -137,12 +146,14 @@ def bfs(g, root):
     while (q.size() > 0):
         currentVert = q.dequeue()
         for nbr in currentVert.getConnections():
+            cache.append(nbr)
             if (nbr.getColor() == 'white'):
                 nbr.setColor('grey')
                 nbr.setDistance(currentVert.getDistance() + 1)
                 nbr.setPred(currentVert)
                 q.enqueue(nbr)
         currentVert.setColor('black')
+    return cache
 
 #walk back through a prebuilt tree to connect an endpoint with said tree's root
 def traverse(y):
@@ -152,13 +163,16 @@ def traverse(y):
         x = x.getPred()
     print(x.getId())
 
+def wipe(cache):
+    for vertex in cache:
+        vertex.reset()
+
 #debug
 def printNeighbors(g, word):
-    bfs(g, g.getVertex(word)); [print(nbr.getId()) for nbr in g.getVertex(word).getConnections()]
+    [print(nbr.getId()) for nbr in g.getVertex(word).getConnections()]
 
 #for use with blake's function idea
 def pullNeighbors(g, word):
-    bfs(g, g.getVertex(word))
     return [nbr.getId() for nbr in g.getVertex(word).getConnections()]
 
 def main():
