@@ -3,6 +3,7 @@ import socket
 from time import sleep
 import ladder
 from random import choice
+from sys import exit
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net"  # Server
@@ -175,7 +176,7 @@ def main():
         try:
             ircmsg = ircsock.recv(2048).decode("UTF-8")
         except KeyboardInterrupt:
-            sys.exit()
+            exit()
         except:
             print("could not decode message")
         ircmsg = ircmsg.strip('\n\r')
