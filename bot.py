@@ -174,6 +174,8 @@ def main():
     while 1:
         try:
             ircmsg = ircsock.recv(2048).decode("UTF-8")
+        except KeyboardInterrupt:
+            sys.exit()
         except:
             print("could not decode message")
         ircmsg = ircmsg.strip('\n\r')
