@@ -76,7 +76,7 @@ def parsemsg(msg, nick):
         oldmsg = " "
         oldmsg = msglogsearch(word)
         if len(oldmsg) > 0:
-            split = oldmsg.find(word)
+            split = oldmsg.find(word.lower())
             sendmsg(oldmsg[:split] + getsimilarword(word) +
                     oldmsg[split+len(word):])
     elif msg[0:2] == "?/":
