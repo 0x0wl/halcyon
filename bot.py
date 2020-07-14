@@ -7,7 +7,7 @@ from random import choice
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net"  # Server
 port = 6667
-channel = "#bots"  # Channel
+channel = "#dtella"  # Channel
 botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
@@ -169,7 +169,10 @@ def main():
     # Join channel specified in globals
     ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
     while 1:
-        ircmsg = ircsock.recv(2048).decode("UTF-8")
+        try:
+            ircmsg = ircsock.recv(2048).decode("UTF-8")
+        except:
+            print("could not decode message")
         ircmsg = ircmsg.strip('\n\r')
         if ircmsg.find("PRIVMSG") != -1:
             name = ircmsg.split('!', 1)[0][1:]
