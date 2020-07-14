@@ -7,7 +7,7 @@ from random import choice
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net"  # Server
 port = 6667
-channel = "#dtella"  # Channel
+channel = "#bots"  # Channel
 botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
@@ -97,7 +97,7 @@ def parsemsg(msg, nick):
             except:
                 newmsg = "[ERR] command not formatted properly."
         else:
-            newmsg = "[ERR] words are not the same length."
+            newmsg = words[0] + " and " + words[1] + " are not the same length."
         sendmsg(newmsg)
         
     
@@ -135,7 +135,10 @@ def wordLadder(word1, word2):
         path = calcPath(g.getVertex(word1.lower()))
         ladder.wipe(cache)
         #g = ladder.constructGraph(dictionary_file)
-        return path
+        if path.find("->") != -1:
+            return path
+        else:
+            return "no path between " + word1 + " and " + word2 + "."
     else:
         w1 = 0
         w2 = 0
@@ -144,11 +147,11 @@ def wordLadder(word1, word2):
         if not "Vertex" in str(type(g.getVertex(word2))):
             w2 = 1
         if w1 and not w2:
-            return "[ERR] " + word1 + " not in dictionary."
+            return word1 + " not in dictionary."
         elif w2 and not w1:
-            return "[ERR] " + word2 + " not in dictionary."
+            return word2 + " not in dictionary."
         elif w1 and w2:
-            return "[ERR] neither " + word1 + " nor " + word2 + " in dictionary."
+            return "neither " + word1 + " nor " + word2 + " in dictionary."
         else:
             return "[ERR] outlier catch. Please contact Kes."
 
