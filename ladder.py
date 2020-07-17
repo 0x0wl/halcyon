@@ -156,14 +156,6 @@ def bfs(g, root):
         currentVert.setColor('black')
     return cache
 
-#walk back through a prebuilt tree to connect an endpoint with said tree's root
-def traverse(y):
-    x = y
-    while (x.getPred()):
-        print(x.getId())
-        x = x.getPred()
-    print(x.getId())
-
 def wipe(cache):
     for vertex in cache:
         vertex.reset()
