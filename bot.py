@@ -8,7 +8,7 @@ from sys import exit
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net"  # Server
 port = 6667
-channel = "#bots"  # Channel
+channel = "#dtella"  # Channel
 botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
@@ -49,6 +49,7 @@ def msglogsearch(word):
         if word.lower() in msglog[i].lower():
             return msglog[i]
         i = i - 1
+    return ""
 
 
 def parsemsg(msg, nick):
@@ -73,12 +74,14 @@ def parsemsg(msg, nick):
         if word.find(" ") != -1:
             sendmsg("Only single words are supported")
             return
-        oldmsg = " "
+        oldmsg = ""
         oldmsg = msglogsearch(word)
         if len(oldmsg) > 0:
             split = oldmsg.find(word.lower())
-            sendmsg(oldmsg[:split] + getsimilarword(word) +
-                    oldmsg[split+len(word):])
+            if split >= 0:
+                sendmsg(oldmsg[:split] + getsimilarword(word) + oldmsg[split+len(word):])
+            else:
+                sendmsg("[ERR] bot is just literally bad sry.")
     elif msg[0:2] == "?/":
         print("<"+nick+"> "+msg)
         word = msg[2:]
@@ -167,9 +170,9 @@ def main():
     # assign the nick to the bot
     ircsock.send(bytes("NICK " + botnick + "\n", "UTF-8"))
     #ircsock.send(bytes("NICKSERV IDENTIFY " + botnickpass + "\n", "UTF-8"))
+    sleep(5)
     #set the bot mode
     ircsock.send(bytes("MODE " + botnick + " +B\n", "UTF-8"))
-    sleep(5)
     # Join channel specified in globals
     ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
     while 1:
