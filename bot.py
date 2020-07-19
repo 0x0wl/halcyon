@@ -8,7 +8,7 @@ from sys import exit
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net"  # Server
 port = 6667
-channels = ["#dtella", "#bots"]  # Channel
+channel = "bots"  # Channel
 botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
@@ -179,9 +179,7 @@ def main():
     # set the bot mode
     ircsock.send(bytes("MODE " + botnick + " +B\n", "UTF-8"))
     # Join channel specified in globals
-    for channel in channels:
-        ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
-        sleep(0.5)
+    ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
     while 1:
         try:
             ircmsg = ircsock.recv(2048).decode("UTF-8")
