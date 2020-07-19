@@ -8,7 +8,7 @@ from sys import exit
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net"  # Server
 port = 6667
-channel = "#dtella"  # Channel
+channels = ["#dtella", "#bots"]  # Channel
 botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
@@ -36,7 +36,7 @@ def logmsg(msg):
 
 def getsimilarword(word):
     word = word.lower()
-    if g.getVertex(word) and len(ladder.pullNeighbors(g, word))>0:
+    if g.getVertex(word) and len(ladder.pullNeighbors(g, word)) > 0:
         new_word = choice(ladder.pullNeighbors(g, word))
         return new_word
     else:
@@ -65,7 +65,7 @@ def parsemsg(msg, nick):
         if word.find(" ") != -1:
             sendmsg("Only single words are supported")
             return
-        sendmsg(getsimilarword(word))
+        sendmsg("<" + nick + "> " + getsimilarword(word))
 
     elif msg[0:2] == "x/":  # x/word/ -> that's my favorite ward, finds recent message with passed word and prints message with replaced word
         print("<"+nick+"> "+msg)
@@ -79,7 +79,12 @@ def parsemsg(msg, nick):
         if len(oldmsg) > 0:
             split = oldmsg.find(word.lower())
             if split >= 0:
-                sendmsg(oldmsg[:split] + getsimilarword(word) + oldmsg[split+len(word):])
+                sendmsg(
+                    "<" + nick + "> " +
+                    oldmsg[:split] +
+                    getsimilarword(word) + 
+                    oldmsg[split+len(word):]
+                )
             else:
                 sendmsg("[ERR] bot is just literally bad sry.")
     elif msg[0:2] == "?/":
@@ -101,21 +106,21 @@ def parsemsg(msg, nick):
             except:
                 newmsg = "[ERR] command not formatted properly."
         else:
-            newmsg = words[0] + " and " + words[1] + " are not the same length."
+            newmsg = words[0] + " and " + \
+                words[1] + " are not the same length."
         sendmsg(newmsg)
-        
-    
-    #elif msg[0:3] == "log":
+
+    # elif msg[0:3] == "log":
       #print("<"+nick+"> "+msg)
       #printlog = " "
       #i = 0
-      #while i < len(msglog):
+      # while i < len(msglog):
         #printlog = printlog + "|" + msglog[i]
         #i = i + 1
-      #sendmsg(printlog)
-    #elif msg[0:2] == "ll":
-      #sendmsg(str(len(msglog)))
-    
+      # sendmsg(printlog)
+    # elif msg[0:2] == "ll":
+      # sendmsg(str(len(msglog)))
+
     else:  # if not a command, log the msg
         logmsg(msg)
 
@@ -171,10 +176,12 @@ def main():
     ircsock.send(bytes("NICK " + botnick + "\n", "UTF-8"))
     #ircsock.send(bytes("NICKSERV IDENTIFY " + botnickpass + "\n", "UTF-8"))
     sleep(5)
-    #set the bot mode
+    # set the bot mode
     ircsock.send(bytes("MODE " + botnick + " +B\n", "UTF-8"))
     # Join channel specified in globals
-    ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
+    for channel in channels:
+        ircsock.send(bytes("JOIN " + channel + "\n", "UTF-8"))
+        sleep(0.5)
     while 1:
         try:
             ircmsg = ircsock.recv(2048).decode("UTF-8")
