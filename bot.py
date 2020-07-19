@@ -8,7 +8,7 @@ from sys import exit
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "irc.dtella.net"  # Server
 port = 6667
-channel = "bots"  # Channel
+channel = "#dtella"  # Channel
 botnick = "halcyon"  # Your bots nick
 admins = ["kes", "dragonfyre"]
 exitcode = "bye " + botnick
@@ -108,7 +108,7 @@ def parsemsg(msg, nick):
         else:
             newmsg = words[0] + " and " + \
                 words[1] + " are not the same length."
-        sendmsg(newmsg)
+        sendmsg("<" + nick + "> " + newmsg)
 
     # elif msg[0:3] == "log":
       #print("<"+nick+"> "+msg)
