@@ -25,7 +25,7 @@ def pong(id):  # respond to server Pings.
 
 def sendmsg(msg, target=channel):  # sends messages to the target.
     ircsock.send(bytes("PRIVMSG " + target + " :" + msg + "\n", "UTF-8"))
-    logmsg(msg)
+    logmsg(botnick, msg)
 
 
 def logmsg(nick, msg):
@@ -132,8 +132,9 @@ def parsemsg(msg, nick):
         #sendmsg(str(len(msglog)))
         
         else:  # if not a command, log the msg
-            logmsg(msg)
-    except:
+            logmsg(nick, msg)
+    except Exception as e:
+        print(e)
         sendmsg("malformatted request")
 
 
