@@ -28,8 +28,8 @@ def sendmsg(msg, target=channel):  # sends messages to the target.
     logmsg(msg)
 
 
-def logmsg(msg):
-    msglog.append(msg)
+def logmsg(nick, msg):
+    msglog.append("<"+nick+"> "+msg)
     if len(msglog) > logcap:
         msglog.pop(0)
 
@@ -51,73 +51,90 @@ def msglogsearch(word):
         i = i - 1
     return ""
 
+def fetchNeighbors(word):
+    response = ""
+    nbrs = ladder.pullNeighbors(g, word)
+    for nbr in nbrs:
+        response += nbr + ", "
+    if len(response) > 0:
+        return response[:-2]
+    else:
+        return "no neighbors for "+word
+
 
 def parsemsg(msg, nick):
     # check for commands
     isAdmin = 0
     if nick in admins:
         isAdmin = 1
+    try:
+        if msg[0:2] == "y/":  # y/word/ -> ward, just queries the bot for the passed word
+            print("<"+nick+"> "+msg)
+            word = msg[2:]
+            word = word.strip("/")
+            if word.find(" ") != -1:
+                sendmsg("Only single words are supported")
+                return
+            sendmsg(getsimilarword(word))
 
-    if msg[0:2] == "y/":  # y/word/ -> ward, just queries the bot for the passed word
-        print("<"+nick+"> "+msg)
-        word = msg[2:]
-        word = word.strip("/")
-        if word.find(" ") != -1:
-            sendmsg("Only single words are supported")
-            return
-        sendmsg(getsimilarword(word))
-
-    elif msg[0:2] == "x/":  # x/word/ -> that's my favorite ward, finds recent message with passed word and prints message with replaced word
-        print("<"+nick+"> "+msg)
-        word = msg[2:]
-        word = word.strip("/")
-        if word.find(" ") != -1:
-            sendmsg("Only single words are supported")
-            return
-        oldmsg = ""
-        oldmsg = msglogsearch(word)
-        if len(oldmsg) > 0:
-            split = oldmsg.find(word.lower())
-            if split >= 0:
-                sendmsg(oldmsg[:split] + getsimilarword(word) + oldmsg[split+len(word):])
+        elif msg[0:2] == "x/":  # x/word/ -> that's my favorite ward, finds recent message with passed word and prints message with replaced word
+            print("<"+nick+"> "+msg)
+            word = msg[2:]
+            word = word.strip("/")
+            if word.find(" ") != -1:
+                sendmsg("Only single words are supported")
+                return
+            oldmsg = ""
+            oldmsg = msglogsearch(word)
+            if len(oldmsg) > 0:
+                split = oldmsg.find(word.lower())
+                if split >= 0:
+                    sendmsg(oldmsg[:split] + getsimilarword(word) + oldmsg[split+len(word):])
+                else:
+                    sendmsg("[ERR] bot is just literally bad sry.")
             else:
-                sendmsg("[ERR] bot is just literally bad sry.")
-    elif msg[0:2] == "?/":
-        print("<"+nick+"> "+msg)
-        word = msg[2:]
-        word = word[:word.find("/")]
-        if word.find(" ") != -1:
-            sendmsg("Only single words are supported")
-            return
-        oldmsg = " "
-        oldmsg = msglogsearch(word)
-        sendmsg(oldmsg)
-    elif msg[0:3] == "!wl":
-        print("<"+nick+"> "+msg)
-        words = msg[4:].split()
-        if len(words[0]) == len(words[1]):
-            try:
-                newmsg = wordLadder(words[0], words[1])
-            except:
-                newmsg = "[ERR] command not formatted properly."
-        else:
-            newmsg = words[0] + " and " + words[1] + " are not the same length."
-        sendmsg(newmsg)
+                sendmsg("can't find any recent messages containing " + word)
+        elif msg[0:2] == "?/":
+            print("<"+nick+"> "+msg)
+            word = msg[2:]
+            word = word[:word.find("/")]
+            if word.find(" ") != -1:
+                sendmsg("Only single words are supported")
+                return
+            oldmsg = " "
+            oldmsg = msglogsearch(word)
+            sendmsg(oldmsg)
+        elif msg[0:3] == "!wl":
+            print("<"+nick+"> "+msg)
+            words = msg[4:].split()
+            if len(words) == 1:
+                newmsg = fetchNeighbors(words[0])
+            elif len(words) == 2:
+                if len(words[0]) == len(words[1]):
+                    try:
+                        newmsg = wordLadder(words[0], words[1])
+                    except:
+                        newmsg = "[ERR] command not formatted properly."
+                else:
+                    newmsg = words[0] + " and " + words[1] + " are not the same length."
+            sendmsg(newmsg)
+            
         
-    
-    #elif msg[0:3] == "log":
-      #print("<"+nick+"> "+msg)
-      #printlog = " "
-      #i = 0
-      #while i < len(msglog):
-        #printlog = printlog + "|" + msglog[i]
-        #i = i + 1
-      #sendmsg(printlog)
-    #elif msg[0:2] == "ll":
-      #sendmsg(str(len(msglog)))
-    
-    else:  # if not a command, log the msg
-        logmsg(msg)
+        #elif msg[0:3] == "log":
+        #print("<"+nick+"> "+msg)
+        #printlog = " "
+        #i = 0
+        #while i < len(msglog):
+            #printlog = printlog + "|" + msglog[i]
+            #i = i + 1
+        #sendmsg(printlog)
+        #elif msg[0:2] == "ll":
+        #sendmsg(str(len(msglog)))
+        
+        else:  # if not a command, log the msg
+            logmsg(msg)
+    except:
+        sendmsg("malformatted request")
 
 
 def calcPath(y):

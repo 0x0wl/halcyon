@@ -167,8 +167,3 @@ def printNeighbors(g, word):
 #for use with blake's function idea
 def pullNeighbors(g, word):
     return [nbr.getId() for nbr in g.getVertex(word).getConnections()]
-
-def main():
-    g = constructGraph('words.txt')
-    bfs(g, g.getVertex(sys.argv[2]))
-    traverse(g.getVertex(sys.argv[1]))
